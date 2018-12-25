@@ -1,0 +1,45 @@
+function onOpen() {
+  // Add a menu with some items and a sub-menu.  
+  DocumentApp.getUi().createMenu('Insert time')
+      .addItem('Insert Date & Hours', 'insertAtCursor')
+      .addItem('Insert Date & Hours & Minutes', 'insertAtCursorwithminutes')
+      .addToUi();
+}
+
+/**
+ * Inserts the date at the current cursor location in boldface, appends 2 blank lines, moves cursor to the end at the last blank line.
+ * Time format: yyyy=MM=dd:HH TimeZone name
+ */
+function insertAtCursor() {
+  var cursor = DocumentApp.getActiveDocument().getCursor();
+  if (cursor) {
+    // Attempt to insert text at the cursor position. If insertion returns null,
+    var date = Utilities.formatDate(new Date(), Session.getTimeZone(), "yyyy-MM-dd:HH"); // "yyyy-MM-dd'T'HH:mm:ss'Z'"
+  }
+  cursor.insertText("\n\n");
+  var element = cursor.insertText(date + " TZ: " + Session.getTimeZone());
+  element.setBold(true);
+  var txtEl=cursor.getElement();
+  var txtOff=cursor.getOffset();
+  var pos=DocumentApp.getActiveDocument().newPosition(txtEl, txtOff + 2);
+  DocumentApp.getActiveDocument().setCursor(pos);
+}
+
+/**
+ * Inserts the date at the current cursor location in boldface, appends 2 blank lines, moves cursor to the end at the last blank line.
+ * Time format: yyyy=MM=dd HH:mm TimeZone name
+ */
+function insertAtCursorwithminutes() {
+  var cursor = DocumentApp.getActiveDocument().getCursor();
+  if (cursor) {
+    // Attempt to insert text at the cursor position. If insertion returns null,
+    var date = Utilities.formatDate(new Date(), Session.getTimeZone(), "yyyy-MM-dd HH:mm"); // "yyyy-MM-dd'T'HH:mm:ss'Z'"
+  }
+  cursor.insertText("\n\n");  
+  var element = cursor.insertText(date + " TZ: " + Session.getTimeZone());
+  element.setBold(true);
+  var txtEl=cursor.getElement();
+  var txtOff=cursor.getOffset();
+  var pos=DocumentApp.getActiveDocument().newPosition(txtEl, txtOff + 2);
+  DocumentApp.getActiveDocument().setCursor(pos);
+}
