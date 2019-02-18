@@ -3,6 +3,7 @@ function onOpen() {
   DocumentApp.getUi().createMenu('Insert time')
       .addItem('Insert Date & Hours', 'insertAtCursor')
       .addItem('Insert Date & Hours & Minutes', 'insertAtCursorwithminutes')
+      .addItem('Insert Date & Hours & Minutes China', 'insertAtCursorwithminutesChina')
       .addToUi();
 }
 
@@ -33,10 +34,27 @@ function insertAtCursorwithminutes() {
   var cursor = DocumentApp.getActiveDocument().getCursor();
   if (cursor) {
     // Attempt to insert text at the cursor position. If insertion returns null,
-    var date = Utilities.formatDate(new Date(), Session.getTimeZone(), "yyyy-MM-dd HH:mm"); // "yyyy-MM-dd'T'HH:mm:ss'Z'"
+    timezone = "GMT+" + new Date().getTimezoneOffset()/60
+    var date = Utilities.formatDate(new Date(), timezone, "yyyy-MM-dd HH:mm"); // "yyyy-MM-dd'T'HH:mm:ss'Z'"
   }
   cursor.insertText("\n\n");  
-  var element = cursor.insertText(date + " TZ: " + Session.getTimeZone());
+  var element = cursor.insertText(date + " TZ: " + timezone);
+  element.setBold(true);
+  var txtEl=cursor.getElement();
+  var txtOff=cursor.getOffset();
+  var pos=DocumentApp.getActiveDocument().newPosition(txtEl, txtOff + 2);
+  DocumentApp.getActiveDocument().setCursor(pos);
+}
+
+//China only
+function insertAtCursorwithminutesChina() {
+  var cursor = DocumentApp.getActiveDocument().getCursor();
+  if (cursor) {
+    // Attempt to insert text at the cursor position. If insertion returns null,
+    var date = Utilities.formatDate(new Date(), "GMT+8", "yyyy-MM-dd HH:mm"); // "yyyy-MM-dd'T'HH:mm:ss'Z'"
+  }
+  cursor.insertText("\n\n");  
+  var element = cursor.insertText(date + " TZ: Beijing, China (GMT+8)" );
   element.setBold(true);
   var txtEl=cursor.getElement();
   var txtOff=cursor.getOffset();
